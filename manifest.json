@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GestureFlow — Hands-Free Shorts",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Scroll YouTube Shorts and Instagram Reels with hand gestures via your webcam. Runs fully on-device.",
   "permissions": ["tabs", "storage", "activeTab"],
   "host_permissions": [

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  :root{--bg:#0b0d12;--panel:#13161e;--panel2:#1a1e28;--line:rgba(255,255,255,.1);--txt:#e8ecf4;--mut:#7c8499;--acc:#4ade80;--acc2:#38bdf8;--hot:#f87171}
+  :root{--bg:#0b0d12;--panel:#13161e;--line:rgba(255,255,255,.1);--txt:#e8ecf4;--mut:#7c8499;--acc:#4ade80;--acc2:#38bdf8;--hot:#f87171}
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:330px;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif;padding:16px}
   .logo{font-size:18px;font-weight:700}.logo b{color:var(--acc)}
@@ -11,23 +11,19 @@
   .status{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:13px}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}
   .dot.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
-  .gest{margin-left:auto;font:600 12px ui-monospace,monospace;color:var(--acc2)}
+  .gest{margin-left:auto;font:600 11px ui-monospace,monospace;color:var(--acc2)}
   .btn{width:100%;padding:12px;border:none;border-radius:10px;font:700 14px system-ui;cursor:pointer;transition:.15s}
   .btn-go{background:var(--acc);color:#05210f}.btn-stop{background:var(--panel);color:var(--hot);border:1px solid var(--hot)}
-
   .modes{display:flex;gap:6px;margin-top:14px}
-  .mode{flex:1;padding:10px;border:1px solid var(--line);background:var(--panel);color:var(--mut);border-radius:9px;cursor:pointer;text-align:center;transition:.15s}
+  .mode{flex:1;padding:10px 8px;border:1px solid var(--line);background:var(--panel);color:var(--mut);border-radius:9px;cursor:pointer;text-align:center;transition:.15s}
   .mode b{display:block;font-size:13px;color:var(--txt)}
-  .mode small{font-size:10px}
+  .mode small{font-size:10px;line-height:1.2;display:block;margin-top:2px}
   .mode.active{border-color:var(--acc);background:rgba(74,222,128,.1)}
   .mode.active b{color:var(--acc)}
-
   .row{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12px;color:var(--mut)}
-  .row label{min-width:78px}
-  .row.dim{opacity:.4}
+  .row label{min-width:72px}
   input[type=range]{flex:1;accent-color:var(--acc)}
   .val{font:600 12px ui-monospace,monospace;color:var(--acc);min-width:34px;text-align:right}
-
   .help{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:11px;color:var(--mut);line-height:1.7}
   .help b{color:var(--txt)}
   .key{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--txt);font:600 11px ui-monospace,monospace}
@@ -35,32 +31,20 @@
 </head>
 <body>
   <div class="logo">Gesture<b>Flow</b></div>
-  <div class="sub">Hands-free Shorts &amp; Reels · on-device</div>
+  <div class="sub">One gesture = one video · on-device</div>
 
-  <div class="status">
-    <div class="dot" id="dot"></div>
-    <span id="statusText">Idle</span>
-    <span class="gest" id="gest"></span>
-  </div>
-
+  <div class="status"><div class="dot" id="dot"></div><span id="statusText">Idle</span><span class="gest" id="gest"></span></div>
   <button class="btn btn-go" id="toggle">▶ Start tracking</button>
 
   <div class="modes">
-    <div class="mode active" id="mFlick" data-mode="flick"><b>Flick</b><small>Shorts / Reels</small></div>
-    <div class="mode" id="mGlide" data-mode="glide"><b>Glide</b><small>smooth scroll</small></div>
+    <div class="mode active" id="mStep" data-mode="step"><b>Step</b><small>raise &amp; return · low effort</small></div>
+    <div class="mode" id="mGrab" data-mode="grab"><b>Grab</b><small>pinch &amp; pull · precise</small></div>
   </div>
 
-  <div class="row"><label>Sensitivity</label><input type="range" id="sens" min="0.5" max="2.5" step="0.1" value="1"><span class="val" id="sensV">1.0</span></div>
+  <div class="row"><label id="reachLbl">Reach</label><input type="range" id="reach" min="7" max="20" step="1" value="13"><span class="val" id="reachV">13</span></div>
   <div class="row"><label>Smoothness</label><input type="range" id="smooth" min="0" max="100" step="5" value="55"><span class="val" id="smoothV">55</span></div>
-  <div class="row" id="rowSpeed"><label>Glide speed</label><input type="range" id="speed" min="10" max="50" step="2" value="28"><span class="val" id="speedV">28</span></div>
-  <div class="row" id="rowCool"><label>Flick cooldown</label><input type="range" id="cool" min="300" max="1500" step="50" value="700"><span class="val" id="coolV">700</span></div>
 
-  <div class="help">
-    1. Open <b>youtube.com/shorts</b> or <b>instagram.com/reels</b>.<br>
-    2. Press <b>Start tracking</b> → small camera window opens → <b>Allow</b> camera.<br>
-    3. Switch back to the video tab and gesture:<br>
-    <span class="key">✋ raise</span> next/scroll &nbsp; <span class="key">👇 lower</span> prev/up &nbsp; <span class="key">✊ fist</span> pause &nbsp; <span class="key">🤏 pinch</span> like
-  </div>
+  <div class="help" id="help"></div>
 
   <script src="popup.js"></script>
 </body>

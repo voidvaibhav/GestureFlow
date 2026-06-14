@@ -1,55 +1,45 @@
-/* GestureFlow popup (v1.2) — mode toggle + settings + tracker window control */
+/* GestureFlow popup (v1.3) — Step/Grab modes */
 const $ = id => document.getElementById(id);
-let tracking = false;
-let mode = 'flick';
+let tracking=false, mode='step';
 
-// restore
-chrome.storage.local.get(['mode','sensitivity','cooldown','maxspeed','smoothness'], (s) => {
-  if (s.mode) setMode(s.mode, false);
-  if (s.sensitivity) { $('sens').value = s.sensitivity; $('sensV').textContent = (+s.sensitivity).toFixed(1); }
-  if (s.cooldown)    { $('cool').value = s.cooldown;    $('coolV').textContent = s.cooldown; }
-  if (s.maxspeed)    { $('speed').value = s.maxspeed;   $('speedV').textContent = s.maxspeed; }
-  if (typeof s.smoothness === 'number') { $('smooth').value = s.smoothness; $('smoothV').textContent = s.smoothness; }
-  reflectModeRows();
+const HELP = {
+  step: '<b>Step:</b> hold hand in the middle, gently <b>raise</b> past the line for next, <b>lower</b> for prev — then return to the middle to re-arm. One reach = one video.<br><span class="key">✊ fist</span> pause &nbsp; <span class="key">🤏 pinch</span> like',
+  grab: '<b>Grab:</b> <b>pinch</b> to grab, <b>pull up</b> for next / <b>down</b> for prev, then release. One pull = one video. Pinch &amp; release in place = like.<br><span class="key">✊ fist</span> pause'
+};
+const REACH_LBL = { step:'Reach', grab:'Pull dist' };
+
+chrome.storage.local.get(['mode','reach','smoothness'], s=>{
+  if(s.mode) mode=s.mode;
+  if(s.reach){ $('reach').value=s.reach*100; $('reachV').textContent=Math.round(s.reach*100); }
+  if(typeof s.smoothness==='number'){ $('smooth').value=s.smoothness; $('smoothV').textContent=s.smoothness; }
+  paintMode();
 });
+chrome.runtime.sendMessage({type:'GF_STATUS'},r=>{ if(r&&r.tracking) setUI(true); });
 
-chrome.runtime.sendMessage({ type: 'GF_STATUS' }, (r) => { if (r && r.tracking) setUI(true); });
-
-function setUI(on) {
-  tracking = on;
-  $('toggle').textContent = on ? '⏹ Stop tracking' : '▶ Start tracking';
-  $('toggle').className = 'btn ' + (on ? 'btn-stop' : 'btn-go');
-  $('dot').className = 'dot' + (on ? ' on' : '');
-  $('statusText').textContent = on ? 'Tracking window open' : 'Idle';
-  if (!on) $('gest').textContent = '';
+function setUI(on){
+  tracking=on;
+  $('toggle').textContent=on?'⏹ Stop tracking':'▶ Start tracking';
+  $('toggle').className='btn '+(on?'btn-stop':'btn-go');
+  $('dot').className='dot'+(on?' on':'');
+  $('statusText').textContent=on?'Tracking window open':'Idle';
+  if(!on) $('gest').textContent='';
 }
-
-$('toggle').onclick = () => {
-  if (tracking) chrome.runtime.sendMessage({ type: 'GF_STOP' }, () => setUI(false));
-  else chrome.runtime.sendMessage({ type: 'GF_START' }, (r) => { if (r && r.ok) setUI(true); });
+$('toggle').onclick=()=>{
+  if(tracking) chrome.runtime.sendMessage({type:'GF_STOP'},()=>setUI(false));
+  else chrome.runtime.sendMessage({type:'GF_START'},r=>{ if(r&&r.ok) setUI(true); });
 };
 
-// mode toggle
-function setMode(m, persist = true) {
-  mode = m;
-  $('mFlick').classList.toggle('active', m === 'flick');
-  $('mGlide').classList.toggle('active', m === 'glide');
-  reflectModeRows();
-  if (persist) chrome.storage.local.set({ mode: m });
+function paintMode(){
+  $('mStep').classList.toggle('active', mode==='step');
+  $('mGrab').classList.toggle('active', mode==='grab');
+  $('help').innerHTML=HELP[mode];
+  $('reachLbl').textContent=REACH_LBL[mode];
 }
-function reflectModeRows() {
-  $('rowSpeed').classList.toggle('dim', mode !== 'glide');
-  $('rowCool').classList.toggle('dim', mode !== 'flick');
-}
-$('mFlick').onclick = () => setMode('flick');
-$('mGlide').onclick = () => setMode('glide');
+function setMode(m){ mode=m; chrome.storage.local.set({mode:m}); paintMode(); }
+$('mStep').onclick=()=>setMode('step');
+$('mGrab').onclick=()=>setMode('grab');
 
-// sliders -> storage (tracker reads live)
-$('sens').oninput   = e => { $('sensV').textContent = (+e.target.value).toFixed(1); chrome.storage.local.set({ sensitivity: +e.target.value }); };
-$('smooth').oninput = e => { $('smoothV').textContent = e.target.value; chrome.storage.local.set({ smoothness: +e.target.value }); };
-$('speed').oninput  = e => { $('speedV').textContent = e.target.value; chrome.storage.local.set({ maxspeed: +e.target.value }); };
-$('cool').oninput   = e => { $('coolV').textContent = e.target.value; chrome.storage.local.set({ cooldown: +e.target.value }); };
+$('reach').oninput  = e=>{ $('reachV').textContent=e.target.value; chrome.storage.local.set({reach:+e.target.value/100}); };
+$('smooth').oninput = e=>{ $('smoothV').textContent=e.target.value; chrome.storage.local.set({smoothness:+e.target.value}); };
 
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.type === 'GF_POPUP_STATE' && msg.state) $('gest').textContent = msg.state.gesture || '';
-});
+chrome.runtime.onMessage.addListener(m=>{ if(m.type==='GF_POPUP_STATE'&&m.state) $('gest').textContent=m.state.gesture||''; });
