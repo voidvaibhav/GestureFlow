@@ -1,51 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<style>
+<html lang="en"><head><meta charset="UTF-8"><style>
   :root{--bg:#0b0d12;--panel:#13161e;--line:rgba(255,255,255,.1);--txt:#e8ecf4;--mut:#7c8499;--acc:#4ade80;--acc2:#38bdf8;--hot:#f87171}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{width:330px;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif;padding:16px}
-  .logo{font-size:18px;font-weight:700}.logo b{color:var(--acc)}
-  .sub{font-size:11px;color:var(--mut);margin-bottom:14px}
+  body{width:340px;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif;padding:16px}
+  .logo{font-size:18px;font-weight:700}.logo b{color:var(--acc)}.sub{font-size:11px;color:var(--mut);margin-bottom:14px}
   .status{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:13px}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}
-  .dot.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}.dot.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
   .gest{margin-left:auto;font:600 11px ui-monospace,monospace;color:var(--acc2)}
   .btn{width:100%;padding:12px;border:none;border-radius:10px;font:700 14px system-ui;cursor:pointer;transition:.15s}
   .btn-go{background:var(--acc);color:#05210f}.btn-stop{background:var(--panel);color:var(--hot);border:1px solid var(--hot)}
   .modes{display:flex;gap:6px;margin-top:14px}
-  .mode{flex:1;padding:10px 8px;border:1px solid var(--line);background:var(--panel);color:var(--mut);border-radius:9px;cursor:pointer;text-align:center;transition:.15s}
-  .mode b{display:block;font-size:13px;color:var(--txt)}
-  .mode small{font-size:10px;line-height:1.2;display:block;margin-top:2px}
-  .mode.active{border-color:var(--acc);background:rgba(74,222,128,.1)}
-  .mode.active b{color:var(--acc)}
+  .mode{flex:1;padding:9px 6px;border:1px solid var(--line);background:var(--panel);color:var(--mut);border-radius:9px;cursor:pointer;text-align:center;transition:.15s}
+  .mode b{display:block;font-size:13px;color:var(--txt)}.mode small{font-size:9.5px;line-height:1.2;display:block;margin-top:2px}
+  .mode.active{border-color:var(--acc);background:rgba(74,222,128,.1)}.mode.active b{color:var(--acc)}
   .row{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12px;color:var(--mut)}
-  .row label{min-width:72px}
-  input[type=range]{flex:1;accent-color:var(--acc)}
+  .row label{min-width:72px}input[type=range]{flex:1;accent-color:var(--acc)}
   .val{font:600 12px ui-monospace,monospace;color:var(--acc);min-width:34px;text-align:right}
   .help{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:11px;color:var(--mut);line-height:1.7}
-  .help b{color:var(--txt)}
-  .key{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--txt);font:600 11px ui-monospace,monospace}
-</style>
-</head>
-<body>
+  .help b{color:var(--txt)}.key{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--txt);font:600 11px ui-monospace,monospace}
+</style></head><body>
   <div class="logo">Gesture<b>Flow</b></div>
   <div class="sub">One gesture = one video · on-device</div>
-
   <div class="status"><div class="dot" id="dot"></div><span id="statusText">Idle</span><span class="gest" id="gest"></span></div>
   <button class="btn btn-go" id="toggle">▶ Start tracking</button>
-
   <div class="modes">
-    <div class="mode active" id="mStep" data-mode="step"><b>Step</b><small>raise &amp; return · low effort</small></div>
-    <div class="mode" id="mGrab" data-mode="grab"><b>Grab</b><small>pinch &amp; pull · precise</small></div>
+    <div class="mode active" id="m_step"><b>Step</b><small>raise &amp; return</small></div>
+    <div class="mode" id="m_glide"><b>Glide</b><small>follow, capped</small></div>
+    <div class="mode" id="m_grab"><b>Grab</b><small>pinch &amp; pull</small></div>
   </div>
-
   <div class="row"><label id="reachLbl">Reach</label><input type="range" id="reach" min="7" max="20" step="1" value="13"><span class="val" id="reachV">13</span></div>
+  <div class="row" id="rowGspeed" style="display:none"><label>Glide speed</label><input type="range" id="gspeed" min="5" max="22" step="1" value="10"><span class="val" id="gspeedV">10</span></div>
   <div class="row"><label>Smoothness</label><input type="range" id="smooth" min="0" max="100" step="5" value="55"><span class="val" id="smoothV">55</span></div>
-
   <div class="help" id="help"></div>
-
   <script src="popup.js"></script>
-</body>
-</html>
+</body></html>
