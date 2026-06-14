@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "GestureFlow — Hands-Free Shorts",
+  "version": "1.2.0",
+  "description": "Scroll YouTube Shorts and Instagram Reels with hand gestures via your webcam. Runs fully on-device.",
+  "permissions": ["tabs", "storage", "activeTab"],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://m.youtube.com/*",
+    "https://www.instagram.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "GestureFlow",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*",
+        "https://www.instagram.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    { "resources": ["vendor/*"], "matches": ["<all_urls>"] }
+  ]
+}

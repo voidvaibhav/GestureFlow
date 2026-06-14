@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="vendor/camera_utils.js"></script>
+<script src="vendor/drawing_utils.js"></script>
+<script src="vendor/hands.js"></script>
+<style>
+  :root{--bg:#0b0d12;--panel:#13161e;--line:rgba(255,255,255,.1);--txt:#e8ecf4;--mut:#7c8499;--acc:#4ade80;--acc2:#38bdf8;--hot:#f87171}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif;padding:14px;overflow:hidden}
+  .logo{font-size:16px;font-weight:700}.logo b{color:var(--acc)}
+  .sub{font-size:11px;color:var(--mut);margin-bottom:10px}
+  .camwrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  #cam{display:none}
+  #ov{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1)}
+  .hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mut);font-size:12px;padding:14px;line-height:1.5}
+  .bar{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}
+  .dot.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+  .dot.err{background:var(--hot)}
+  .g{margin-left:auto;font:600 12px ui-monospace,monospace;color:var(--acc2)}
+  .err{display:none;margin-top:8px;font-size:11px;color:#fecaca;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);padding:8px;border-radius:8px;line-height:1.4}
+  .err.show{display:block}
+  .tip{margin-top:8px;font-size:11px;color:var(--mut);line-height:1.5}
+  .tip b{color:var(--txt)}
+</style>
+</head>
+<body>
+  <div class="logo">Gesture<b>Flow</b></div>
+  <div class="sub">Keep this little window open while you watch.</div>
+
+  <div class="camwrap">
+    <video id="cam" autoplay playsinline muted></video>
+    <canvas id="ov" width="480" height="360"></canvas>
+    <div class="hint" id="hint">Starting camera…<br>Click <b>Allow</b> if Chrome asks.</div>
+  </div>
+
+  <div class="bar">
+    <div class="dot" id="dot"></div>
+    <span id="status">Initializing</span>
+    <span class="g" id="gest"></span>
+  </div>
+
+  <div class="err" id="err"></div>
+
+  <div class="tip">
+    ✋ raise → next &nbsp; 👇 lower → prev &nbsp; ✊ fist → pause &nbsp; 🤏 pinch → like<br>
+    Switch back to your <b>YouTube/Instagram</b> tab — actions go there automatically.
+  </div>
+
+  <script src="tracker.js"></script>
+</body>
+</html>
