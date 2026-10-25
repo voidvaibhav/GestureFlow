@@ -1,6 +1,6 @@
-# GestureFlow — Hands-Free Shorts & Reels (Chrome Extension)
+# GestureFlow — Hands-Free shorts (Browser Extension)
 
-Scroll YouTube Shorts and Instagram Reels with hand gestures using your webcam.
+Scroll YouTube Shorts and with hand gestures using your webcam.
 Everything runs **on-device** — no video ever leaves your machine.
 
 ## Install (Load Unpacked)
@@ -13,7 +13,7 @@ Everything runs **on-device** — no video ever leaves your machine.
 
 ## Use
 
-1. Open **youtube.com/shorts** or **instagram.com/reels** in a tab.
+1. Open **youtube.com/shorts** in a tab.
 2. Click the GestureFlow icon → **Start tracking**.
 3. The first time, Chrome asks for **camera permission** — click **Allow**.
 4. Raise your hand into view and gesture:
